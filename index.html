@@ -1290,6 +1290,177 @@
       }
     }
 
+    /* ===== COPA 2026 — remover após o Mundial ===== */
+    #copa-bar {
+      background: #07150a;
+      color: rgba(255,255,255,0.8);
+      padding: 11px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      border-bottom: 1px solid rgba(60,180,80,0.18);
+      position: relative;
+    }
+    #copa-bar a {
+      color: #5edb80;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    #copa-bar a:hover { color: #fff; }
+    #copa-bar .copa-close {
+      position: absolute;
+      right: 24px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.3);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+      padding: 2px 4px;
+    }
+    #copa-bar .copa-close:hover { color: rgba(255,255,255,0.7); }
+
+    #copa2026 {
+      background: linear-gradient(160deg, #060f08 0%, #091408 60%, #060f08 100%);
+      border-top: 1px solid rgba(50,150,70,0.2);
+      border-bottom: 1px solid rgba(50,150,70,0.2);
+      padding: 100px 60px;
+    }
+    .copa-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+    .copa-text .section-label { color: #4cae68; }
+    .copa-text .section-label::before { background: #4cae68; }
+    .copa-text h2 { color: #ffffff; }
+    .copa-text h2 em { color: #4cae68; font-style: italic; }
+    .copa-text > p {
+      color: rgba(255,255,255,0.5);
+      line-height: 1.9;
+      margin-top: 28px;
+      font-size: 1rem;
+    }
+    .copa-divider {
+      width: 50px;
+      height: 1px;
+      background: #4cae68;
+      margin: 28px 0;
+    }
+    .copa-offers {
+      margin-top: 36px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+    .copa-offer-item {
+      border: 1px solid rgba(60,180,80,0.18);
+      padding: 20px 14px;
+      background: rgba(60,180,80,0.04);
+    }
+    .copa-offer-item strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: #5edb80;
+      margin-bottom: 6px;
+    }
+    .copa-offer-item span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      line-height: 1.5;
+    }
+    .copa-cta {
+      margin-top: 40px;
+      display: inline-block;
+      background: #2e7d4f;
+      color: #fff;
+      padding: 16px 40px;
+      text-decoration: none;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    .copa-cta:hover {
+      background: #3a9962;
+      transform: translateY(-2px);
+    }
+    .copa-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 32px;
+    }
+    .copa-ball-wrap {
+      font-size: 4.5rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 50px rgba(80,200,100,0.25));
+      animation: copaPulse 3s ease-in-out infinite;
+    }
+    @keyframes copaPulse {
+      0%, 100% { filter: drop-shadow(0 0 30px rgba(80,200,100,0.2)); }
+      50% { filter: drop-shadow(0 0 60px rgba(80,200,100,0.45)); }
+    }
+    .copa-countdown {
+      display: flex;
+      gap: 12px;
+    }
+    .copa-count-unit {
+      text-align: center;
+      border: 1px solid rgba(60,180,80,0.2);
+      padding: 20px 14px 14px;
+      min-width: 70px;
+      background: rgba(60,180,80,0.04);
+    }
+    .copa-count-unit strong {
+      display: block;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.6rem;
+      font-weight: 300;
+      color: #5edb80;
+      line-height: 1;
+    }
+    .copa-count-unit span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-top: 8px;
+      display: block;
+    }
+    .copa-count-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.63rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+    }
+    @media (max-width: 768px) {
+      #copa-bar { padding: 10px 20px 10px 20px; flex-wrap: wrap; gap: 8px; font-size: 0.65rem; }
+      #copa-bar .copa-close { right: 10px; }
+      #copa2026 { padding: 72px 24px; }
+      .copa-grid { grid-template-columns: 1fr; gap: 52px; }
+      .copa-offers { grid-template-columns: 1fr; gap: 10px; }
+      .copa-countdown { gap: 8px; }
+      .copa-count-unit { min-width: 58px; padding: 14px 10px 10px; }
+      .copa-count-unit strong { font-size: 2rem; }
+    }
+    /* ===== FIM COPA 2026 ===== */
+
     /* SMALL PHONES — 420px */
     @media (max-width: 420px) {
       .hero h1 {
