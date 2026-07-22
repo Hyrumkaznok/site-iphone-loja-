@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cliente — LOOVIiPhnes Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body>
+
+  <header class="admin-topbar">
+    <a href="dashboard.html" class="admin-logo">LOOVI<span>iPhnes</span> <small>admin</small></a>
+    <nav class="admin-nav">
+      <a href="dashboard.html" class="admin-nav-link">Dashboard</a>
+      <a href="clientes.html" class="admin-nav-link active">Clientes</a>
+      <a href="financeiro.html" class="admin-nav-link">Financeiro</a>
+    </nav>
+    <button class="admin-logout" onclick="logout()">Sair</button>
+  </header>
+
+  <main class="admin-main">
+    <div class="admin-header-row">
+      <div>
+        <a href="clientes.html" style="font-family:'DM Mono',monospace;font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--admin-muted);text-decoration:none;">← Clientes</a>
+        <h1 class="admin-title" id="clienteNomeTitulo" style="margin-top:8px">Carregando...</h1>
+      </div>
+      <button class="btn btn-outline" onclick="openEditarCliente()">Editar Cliente</button>
+    </div>
+
+    <div class="admin-panel">
+      <div class="client-info-grid">
+        <div class="client-info-item"><strong>Telefone</strong><span id="infoTelefone">-</span></div>
+        <div class="client-info-item"><strong>WhatsApp</strong><span id="infoWhatsapp">-</span></div>
+        <div class="client-info-item"><strong>E-mail</strong><span id="infoEmail">-</span></div>
+        <div class="client-info-item"><strong>Observações</strong><span id="infoObservacoes">-</span></div>
+      </div>
+    </div>
+
+    <div class="admin-header-row">
+      <h2 class="admin-title" style="font-size:1.4rem;margin-bottom:0">Celulares Comprados</h2>
+      <button class="btn" onclick="openRegistrarVenda()">Registrar Venda</button>
+    </div>
+
+    <div class="admin-panel" style="padding:0">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Aparelho</th>
+            <th>Cor / Armaz.</th>
+            <th>IMEI</th>
+            <th>Valor</th>
+            <th>Pagamento</th>
+            <th>Garantia</th>
+          </tr>
+        </thead>
+        <tbody id="vendasBody">
+          <tr><td colspan="7" class="empty-state">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- MODAL EDITAR CLIENTE -->
+  <div class="modal-overlay" id="modalEditarCliente">
+    <div class="modal">
+      <button class="modal-close" onclick="closeEditarCliente()">×</button>
+      <h3>Editar Cliente</h3>
+      <form id="formEditarCliente">
+        <div class="form-group">
+          <label>Nome</label>
+          <input type="text" id="editNome" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Telefone</label>
+            <input type="tel" id="editTelefone">
+          </div>
+          <div class="form-group">
+            <label>WhatsApp</label>
+            <input type="tel" id="editWhatsapp">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" id="editEmail">
+        </div>
+        <div class="form-group">
+          <label>Observações</label>
+          <textarea id="editObservacoes"></textarea>
+        </div>
+        <div class="form-error" id="editClienteError"></div>
+        <button type="submit" class="btn">Salvar Alterações</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL REGISTRAR VENDA -->
+  <div class="modal-overlay" id="modalVenda">
+    <div class="modal">
+      <button class="modal-close" onclick="closeRegistrarVenda()">×</button>
+      <h3>Registrar Venda</h3>
+      <form id="formVenda">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Marca</label>
+            <input type="text" id="vendaMarca" value="Apple" required>
+          </div>
+          <div class="form-group">
+            <label>Modelo</label>
+            <input type="text" id="vendaModelo" required placeholder="iPhone 15 Pro">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cor</label>
+            <input type="text" id="vendaCor">
+          </div>
+          <div class="form-group">
+            <label>Armazenamento</label>
+            <input type="text" id="vendaArmazenamento" placeholder="128GB">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>IMEI</label>
+          <input type="text" id="vendaImei">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Valor (R$)</label>
+            <input type="number" id="vendaValor" step="0.01" min="0" required>
+          </div>
+          <div class="form-group">
+            <label>Forma de Pagamento</label>
+            <select id="vendaFormaPagamento">
+              <option value="Pix">Pix</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Cartão de Crédito">Cartão de Crédito</option>
+              <option value="Cartão de Débito">Cartão de Débito</option>
+              <option value="Boleto">Boleto</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Data da Venda</label>
+            <input type="date" id="vendaData" required>
+          </div>
+          <div class="form-group">
+            <label>Garantia</label>
+            <input type="text" id="vendaGarantia" placeholder="3 meses">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Observações</label>
+          <textarea id="vendaObservacoes"></textarea>
+        </div>
+        <div class="form-error" id="vendaError"></div>
+        <button type="submit" class="btn">Registrar Venda</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="assets/supabase-client.js"></script>
+  <script>
+    const clienteId = new URLSearchParams(window.location.search).get('id');
+    let clienteAtual = null;
+
+    function openEditarCliente() {
+      if (!clienteAtual) return;
+      document.getElementById('editNome').value = clienteAtual.nome ?? '';
+      document.getElementById('editTelefone').value = clienteAtual.telefone ?? '';
+      document.getElementById('editWhatsapp').value = clienteAtual.whatsapp ?? '';
+      document.getElementById('editEmail').value = clienteAtual.email ?? '';
+      document.getElementById('editObservacoes').value = clienteAtual.observacoes ?? '';
+      document.getElementById('modalEditarCliente').classList.add('open');
+    }
+
+    function closeEditarCliente() {
+      document.getElementById('modalEditarCliente').classList.remove('open');
+      document.getElementById('editClienteError').textContent = '';
+    }
+
+    function openRegistrarVenda() {
+      document.getElementById('vendaData').value = new Date().toISOString().slice(0, 10);
+      document.getElementById('modalVenda').classList.add('open');
+    }
+
+    function closeRegistrarVenda() {
+      document.getElementById('modalVenda').classList.remove('open');
+      document.getElementById('formVenda').reset();
+      document.getElementById('vendaError').textContent = '';
+    }
+
+    async function carregarCliente() {
+      const { data, error } = await supabaseClient.from('clientes').select('*').eq('id', clienteId).single();
+      if (error || !data) {
+        document.getElementById('clienteNomeTitulo').textContent = 'Cliente não encontrado';
+        return;
+      }
+      clienteAtual = data;
+      document.getElementById('clienteNomeTitulo').textContent = data.nome;
+      document.getElementById('infoTelefone').textContent = data.telefone || '-';
+      document.getElementById('infoWhatsapp').textContent = data.whatsapp || '-';
+      document.getElementById('infoEmail').textContent = data.email || '-';
+      document.getElementById('infoObservacoes').textContent = data.observacoes || '-';
+    }
+
+    async function carregarVendas() {
+      const { data, error } = await supabaseClient
+        .from('vendas')
+        .select('*')
+        .eq('cliente_id', clienteId)
+        .order('data_venda', { ascending: false });
+
+      const body = document.getElementById('vendasBody');
+      if (error || !data || data.length === 0) {
+        body.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhuma venda registrada para este cliente.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = data.map(v => `
+        <tr>
+          <td class="mono">${formatDate(v.data_venda)}</td>
+          <td>${v.marca} ${v.modelo}</td>
+          <td>${v.cor || '-'} / ${v.armazenamento || '-'}</td>
+          <td class="mono">${v.imei || '-'}</td>
+          <td class="mono">${formatBRL(v.valor)}</td>
+          <td>${v.forma_pagamento || '-'}</td>
+          <td>${v.garantia || '-'}</td>
+        </tr>
+      `).join('');
+    }
+
+    document.getElementById('formEditarCliente').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const errorEl = document.getElementById('editClienteError');
+      errorEl.textContent = '';
+
+      const atualizacao = {
+        nome: document.getElementById('editNome').value.trim(),
+        telefone: document.getElementById('editTelefone').value.trim() || null,
+        whatsapp: document.getElementById('editWhatsapp').value.trim() || null,
+        email: document.getElementById('editEmail').value.trim() || null,
+        observacoes: document.getElementById('editObservacoes').value.trim() || null
+      };
+
+      const { error } = await supabaseClient.from('clientes').update(atualizacao).eq('id', clienteId);
+      if (error) {
+        errorEl.textContent = 'Erro ao salvar alterações.';
+        return;
+      }
+      closeEditarCliente();
+      carregarCliente();
+    });
+
+    document.getElementById('formVenda').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const errorEl = document.getElementById('vendaError');
+      errorEl.textContent = '';
+
+      const novaVenda = {
+        cliente_id: clienteId,
+        marca: document.getElementById('vendaMarca').value.trim(),
+        modelo: document.getElementById('vendaModelo').value.trim(),
+        cor: document.getElementById('vendaCor').value.trim() || null,
+        armazenamento: document.getElementById('vendaArmazenamento').value.trim() || null,
+        imei: document.getElementById('vendaImei').value.trim() || null,
+        valor: parseFloat(document.getElementById('vendaValor').value || '0'),
+        forma_pagamento: document.getElementById('vendaFormaPagamento').value,
+        data_venda: document.getElementById('vendaData').value,
+        garantia: document.getElementById('vendaGarantia').value.trim() || null,
+        observacoes: document.getElementById('vendaObservacoes').value.trim() || null
+      };
+
+      const { error } = await supabaseClient.from('vendas').insert(novaVenda);
+      if (error) {
+        errorEl.textContent = 'Erro ao registrar venda.';
+        return;
+      }
+
+      closeRegistrarVenda();
+      carregarVendas();
+    });
+
+    (async function () {
+      const session = await requireAuth();
+      if (!session) return;
+      if (!clienteId) {
+        document.getElementById('clienteNomeTitulo').textContent = 'Cliente não informado';
+        return;
+      }
+      carregarCliente();
+      carregarVendas();
+    })();
+  </script>
+</body>
+</html>
