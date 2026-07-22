@@ -1,7 +1,7 @@
 // Configuração do Supabase para o painel administrativo.
 // Substitua pelos valores do seu projeto em Project Settings > API.
-const SUPABASE_URL = 'COLOQUE_AQUI_A_URL_DO_SEU_PROJETO_SUPABASE';
-const SUPABASE_ANON_KEY = 'COLOQUE_AQUI_A_ANON_KEY_DO_SEU_PROJETO_SUPABASE';
+const SUPABASE_URL = 'https://tcfmhvjymucwuckvzlca.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_6YKjzj4jEXeYKwQ7syxxGw_ShGf7pPw';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
