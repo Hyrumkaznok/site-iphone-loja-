@@ -45,10 +45,22 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Entrando...';
 
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      let error;
+      try {
+        ({ error } = await supabaseClient.auth.signInWithPassword({ email, password }));
+      } catch (err) {
+        console.error('Falha ao chamar o Supabase Auth:', err);
+        errorEl.textContent = 'Erro de conexão com o servidor. Veja o console (F12) para detalhes.';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Entrar';
+        return;
+      }
 
       if (error) {
-        errorEl.textContent = 'E-mail ou senha inválidos.';
+        console.error('Erro retornado pelo Supabase Auth:', error);
+        errorEl.textContent = error.message === 'Email not confirmed'
+          ? 'Seu e-mail ainda não foi confirmado. Confirme o cadastro no Supabase (Authentication > Users) antes de entrar.'
+          : 'E-mail ou senha inválidos.';
         submitBtn.disabled = false;
         submitBtn.textContent = 'Entrar';
         return;
