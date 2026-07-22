@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — LOOVIiPhnes Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Outfit:wght@200;300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/admin.css">
+</head>
+<body>
+
+  <header class="admin-topbar">
+    <a href="dashboard.html" class="admin-logo">LOOVI<span>iPhnes</span> <small>admin</small></a>
+    <nav class="admin-nav">
+      <a href="dashboard.html" class="admin-nav-link active">Dashboard</a>
+      <a href="clientes.html" class="admin-nav-link">Clientes</a>
+      <a href="financeiro.html" class="admin-nav-link">Financeiro</a>
+    </nav>
+    <button class="admin-logout" onclick="logout()">Sair</button>
+  </header>
+
+  <main class="admin-main">
+    <h1 class="admin-title">Dashboard</h1>
+    <div class="admin-subtitle">Visão geral do negócio</div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><strong id="statClientes">—</strong><span>Clientes cadastrados</span></div>
+      <div class="stat-card"><strong id="statVendasMes">—</strong><span>Vendas no mês</span></div>
+      <div class="stat-card"><strong id="statReceitaMes">—</strong><span>Receita no mês</span></div>
+      <div class="stat-card"><strong id="statVendasTotal">—</strong><span>Vendas no total</span></div>
+    </div>
+
+    <div class="admin-panel" style="padding:0">
+      <div class="admin-header-row" style="padding:32px 32px 0">
+        <h2 class="admin-title" style="font-size:1.4rem;margin-bottom:0">Vendas recentes</h2>
+      </div>
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Cliente</th>
+            <th>Aparelho</th>
+            <th>Valor</th>
+          </tr>
+        </thead>
+        <tbody id="vendasRecentesBody">
+          <tr><td colspan="4" class="empty-state">Carregando...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="assets/supabase-client.js"></script>
+  <script>
+    (async function () {
+      const session = await requireAuth();
+      if (!session) return;
+
+      const now = new Date();
+      const inicioMes = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
+
+      const [{ count: totalClientes }, { data: vendasMes }, { count: totalVendas }, { data: recentes }] = await Promise.all([
+        supabaseClient.from('clientes').select('*', { count: 'exact', head: true }),
+        supabaseClient.from('vendas').select('valor').gte('data_venda', inicioMes),
+        supabaseClient.from('vendas').select('*', { count: 'exact', head: true }),
+        supabaseClient.from('vendas').select('data_venda, valor, modelo, marca, clientes(nome)').order('data_venda', { ascending: false }).limit(5)
+      ]);
+
+      document.getElementById('statClientes').textContent = totalClientes ?? 0;
+      document.getElementById('statVendasMes').textContent = (vendasMes || []).length;
+      document.getElementById('statReceitaMes').textContent = formatBRL((vendasMes || []).reduce((soma, v) => soma + Number(v.valor || 0), 0));
+      document.getElementById('statVendasTotal').textContent = totalVendas ?? 0;
+
+      const body = document.getElementById('vendasRecentesBody');
+      if (!recentes || recentes.length === 0) {
+        body.innerHTML = '<tr><td colspan="4" class="empty-state">Nenhuma venda registrada ainda.</td></tr>';
+        return;
+      }
+
+      body.innerHTML = recentes.map(v => `
+        <tr>
+          <td class="mono">${formatDate(v.data_venda)}</td>
+          <td>${v.clientes?.nome ?? '-'}</td>
+          <td>${v.marca} ${v.modelo}</td>
+          <td class="mono">${formatBRL(v.valor)}</td>
+        </tr>
+      `).join('');
+    })();
+  </script>
+</body>
+</html>
